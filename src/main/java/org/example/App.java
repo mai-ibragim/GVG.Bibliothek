@@ -1,15 +1,22 @@
 package org.example;
 
-public class App
-{
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-        public static void main( String[] args ) {
+public class App {
+
+    public static void main(String[] args) {
+
             Login login = new Login();
 
-            System.out.println("Herzlich Willkommen zur Bibliothek!");
+            System.out.println("\nHerzlich Willkommen zur Bibliothek!\n");
 
-               login.account();
-
+            while (true) {
+                login.account();
             }
+        }
     }
+
+
 

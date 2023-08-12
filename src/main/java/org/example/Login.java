@@ -1,17 +1,17 @@
 package org.example;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Login {
     static Scanner scan = new Scanner(System.in);
     private  String newAccount;
     private  String account;
-    private  int passwort;
-     Books books = new Books();
+    private  String passwort;
+     Book books = new Book();
 
 
-
-    //**********************ACCOUNT******************************************************
 
     void account() {
         try {
@@ -29,7 +29,7 @@ public class Login {
 
                     break;
                 case 3:
-                    System.out.println();
+                    books.menuDe();
                     break;
                 default:
                     try {
@@ -40,63 +40,156 @@ public class Login {
                     break;
             }
         } catch (Exception e){
-            System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus.");
+            System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
             account();
         }
     }
-
-
-    //**********************ANMELDEN******************************************************
-
     void anmelden() {
+        try {
+            System.out.println("Melden Sie sich an: ");
+            account = scan.next();
+            String emailPattern = "^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$";
 
-        System.out.println("Melden Sie sich an: ");
-        account = scan.next();
-        System.out.println("Geben Sie ihr Passwort ein: ");
-        passwort = scan.nextInt();
-        books.menu();
-    }
+            Pattern pattern = Pattern.compile(emailPattern);
+            Matcher matcher = pattern.matcher(account);
+            if (matcher.matches()) {
+                pass();
 
-
-
-    //**********************NEW ACCOUNT******************************************************
-
-
-    void newAccount() {
-        System.out.println("Melden Sie sich an: ");
-        newAccount = scan.next();
-        System.out.println("Geben Sie ihr Passwort ein: ");
-        passwort = scan.nextInt();
-        books.menu();
-    }
-
-
-    //**********************AUSLOGGEN******************************************************
-
-
-    void ausloggen(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Möchten Sie sich ausloggen oder möchten Sie noch Buchliste gucken? (y/n/b): ");
-        char ausloggen = scanner.nextLine().charAt(0);
-
-        if (ausloggen == 'y') {
-
-            System.out.println("Sie wurden ausgeloggt.");
-        } else if(ausloggen == 'n') {
-            System.out.println("Aufwiedersehen!!!");
-        } else if (ausloggen == 'b') {
-            books.buchliste(books);
+            } else {
+                System.out.println("Die eingegebene E-Mail-Adresse ist ungültig.");
+            }
+        } catch (Exception e){
+            System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
+            anmelden();
         }
-        System.exit(0);
     }
-    void changePass(){
-        System.out.println("Geben Sie altes Passwort ein, um neues einzugeben: ");
-        int oldPass = scan.nextInt();
-        System.out.println("Neues Passwort: ");
-        int newPass = scan.nextInt();
-        System.out.println("Das Passwort wurde erfolgreich geändert.");
-        anmelden();
-        books.menu();
-    }
+    void pass() throws InterruptedException {
+        try {
+        Scanner scanner = new Scanner(System.in);
+        int versuch = 3;
+        int falschPass = versuch;
 
+        String correctPassword = "Bibliothek";
+        boolean authentifiziert = false;
+
+        while (falschPass > 0 && !authentifiziert) {
+            System.out.print("Geben Sie das Passwort ein: ");
+            String enteredPassword = scanner.nextLine();
+
+            if (enteredPassword.equals(correctPassword)) {
+                authentifiziert = true;
+                System.out.println("Anmeldung erfolgreich!");
+                books.menuDe();
+            } else {
+                falschPass--;
+                if (falschPass > 0) {
+                    System.out.println("Falsches Passwort. Verbleibende Versuche: " + falschPass);
+                } else {
+                    System.out.println("Zu viele fehlgeschlagene Versuche. Bitte warten Sie 1 Minute.");
+                    Thread.sleep(60000);
+                    falschPass = versuch;
+                }
+            }
+        }
+    } catch (Exception e) {
+            System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
+            pass();
+        }
+    }
+    void newPass() {
+        try {
+            int versuch = 3;
+            while (versuch > 0) {
+                System.out.print("Geben Sie ein Passwort ein: ");
+                passwort = scan.nextLine();
+                System.out.print("Bestätigen Sie das Passwort: ");
+                String confirmPassword = scan.nextLine();
+
+                if (passwort.equals(confirmPassword)) {
+                    System.out.println("Registrierung erfolgreich!");
+                    books.menuDe();
+                } else {
+                    versuch--;
+                    if (versuch > 0) {
+                        System.out.println("Die eingegebenen Passwörter stimmen nicht überein. " +
+                                "Verbleibende Versuche: " + versuch);
+                    } else {
+                        System.out.println("Versuchen Sie später noch mal aus.");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
+            newPass();
+        }
+    }
+    void newAccount() {
+        try {
+            System.out.println("Geben Sie gültige E-Mail Adresse ein: ");
+            newAccount = scan.next();
+            String emailPattern = "^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$";
+
+            Pattern pattern = Pattern.compile(emailPattern);
+            Matcher matcher = pattern.matcher(newAccount);
+            if (matcher.matches()) {
+                newPass();
+            } else {
+                System.out.println("Die eingegebene E-Mail-Adresse ist ungültig.");
+                newAccount();
+            }
+        } catch (Exception e){
+            System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
+            newAccount();
+        }
+    }
+    void ausloggen(){
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Bestätigen Sie bitte mit (y), um auszuloggen: ");
+            char ausloggen = scanner.nextLine().charAt(0);
+
+            if (ausloggen == 'y') {
+
+                System.out.println("Sie wurden ausgeloggt.");
+            }
+            System.exit(0);
+            System.out.println("\nAufwiedersehen!!!");
+        } catch (Exception e){
+            System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
+            ausloggen();
+        }
+    }
+    void changePass() {
+        int versuch = 3;
+        try {
+                System.out.println("Geben Sie altes Passwort ein: ");
+                passwort = scan.nextLine();
+                if(passwort.equals("Bibliothek")) {
+                    while (versuch > 0) {
+                    System.out.print("Geben Sie neues Passwort ein: ");
+                    passwort = scan.nextLine();
+                    System.out.print("Bestätigen Sie das Passwort: ");
+                    String confirmPassword = scan.nextLine();
+                    if (passwort.equals(confirmPassword)) {
+                    System.out.println("Erfolgreich!");
+                    books.menuDe();
+                    } else {
+                    versuch--;
+                    if (versuch > 0) {
+                        System.out.println("Die eingegebenen Passwörter stimmen nicht überein. " +
+                                "Verbleibende Versuche: " + versuch);
+                    } else {
+                        System.out.println("Versuchen Sie später noch mal aus.");
+                    }
+                }
+            }
+                } else {
+                    System.out.println("Sie haben altes Passwort falsch eingegeben. Versuchen Sie noch mal.");
+                    changePass();
+                }
+            } catch (Exception e) {
+            System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
+            changePass();
+        }
+    }
 }
