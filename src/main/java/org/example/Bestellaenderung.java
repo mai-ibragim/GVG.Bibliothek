@@ -12,7 +12,6 @@ static Berechnung berechnung = new Berechnung();
               if(yOdern =='y') {
                   storZur(scanner, storZur);
               } else if(yOdern =='n') {
-
                   berechnung.kaufAusleiYoN(scanner, storZur);
               } else {
                   System.out.println("Ungültige Auswahl.");
@@ -30,10 +29,10 @@ static Berechnung berechnung = new Berechnung();
              char zurueckStor = scanner.nextLine().charAt(0);
 
              if (zurueckStor == 's') {
-                 storZur.gekaufteBuecher.clear();
-                 storZur.gesamtPreis = 0;
+                 Book.warenkorb.bookList.clear();
+
                  System.out.println("Die Auswahl der Bücher wurde storniert.");
-                 books.menuDe();
+                 books.menu();
              } else if (zurueckStor == 'l') {
                  zurueksetzen(scanner, storZur);
              }
@@ -45,18 +44,19 @@ static Berechnung berechnung = new Berechnung();
     }
      static void zurueksetzen(Scanner scanner, Book storZur) {
          try {
+             int anzahlGekaufteBuecher = 0;
              System.out.print("Welches Buch möchten Sie zurücksetzen? Geben Sie die index des Buchs ein: ");
              int buchNummer = scanner.nextInt();
-             scanner.nextLine();
-             if (buchNummer >= 1 && buchNummer <= storZur.gekaufteBuecher.size()) {
-                 Book loschendesBuch = storZur.gekaufteBuecher.remove(buchNummer - 1);
+            scanner.nextLine();
+             if (buchNummer >= 1 && buchNummer <= Book.warenkorb.bookList.size()) {
+                 Book loschendesBuch = Book.warenkorb.bookList.remove(buchNummer - 1);
                  storZur.gesamtPreis -= loschendesBuch.preis;
                  System.out.println("Das Buch '" + loschendesBuch.genres + "' wurde zurückgesetzt.");
                  System.out.println("\nRestliche Bücher: ");
-                 for (Book buch : storZur.gekaufteBuecher) {
+                 for (Book buch : Book.warenkorb.bookList) {
                      System.out.println(buch);
                  }
-                 berechnung.kaufAusleiYoN(scanner, storZur);
+                 Book.warenkorb.show();
              }
          } catch (Exception e) {
              System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());

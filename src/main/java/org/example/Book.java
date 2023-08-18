@@ -21,7 +21,7 @@ public class Book {
     private List<Book> buchliste = new ArrayList<>();
 
     int gesamtPreis = 0;
-    List<Book> gekaufteBuecher = new ArrayList<>();
+   static Warenkorb warenkorb = new Warenkorb();
 
 
 
@@ -36,7 +36,7 @@ public class Book {
     public String toString() {
         return genres + " - " + autor + " (" + jahr + ") - " + preis + " EUR";
     }
-     static void buchliste(Book storZur) {
+      void buchliste(Book storZur) {
         Scanner scanner = new Scanner(System.in);
 
         storZur.buchliste.add(new Book("1. Roman", "Müller", 2005, 25));
@@ -53,8 +53,8 @@ public class Book {
         }
         storZur.auswahl(storZur);
 
-        System.out.println("\nGekaufte Bücher: ");
-        for (Book buch : storZur.gekaufteBuecher) {
+        System.out.println("\nBücher im Warenkorb: ");
+        for (Book buch : this.warenkorb.bookList) {
             System.out.println(buch);
         }
         storZurYoN(scanner, storZur);
@@ -69,7 +69,7 @@ public class Book {
                 scanner.nextLine();
 
                 if (auswahl >= 1 && auswahl <= buchliste.size()) {
-                    gekaufteBuecher.add(buchliste.get(auswahl - 1));
+                    warenkorb.addBook(buchliste.get(auswahl - 1));
                    choice = orderMore(scanner, storZur);
                 } else{
                     System.out.println("Ungültige Auswahl. Bitte wählen Sie zwischen 1 und " + buchliste.size());
@@ -80,7 +80,7 @@ public class Book {
             auswahl(storZur);
         }
     }
-      static void menuDe() {
+      static void menu() {
           Scanner scanner = new Scanner(System.in);
           Book books = new Book();
           Login login = new Login();
@@ -114,7 +114,7 @@ public class Book {
 
           } catch (Exception e) {
               System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
-              menuDe();
+              menu();
           }
       }
     private char orderMore(Scanner scanner, Book storZu) {

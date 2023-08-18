@@ -29,7 +29,7 @@ public class Login {
 
                     break;
                 case 3:
-                    books.menuDe();
+                    books.menu();
                     break;
                 default:
                     try {
@@ -57,6 +57,7 @@ public class Login {
 
             } else {
                 System.out.println("Die eingegebene E-Mail-Adresse ist ungültig.");
+                anmelden();
             }
         } catch (Exception e){
             System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
@@ -79,7 +80,7 @@ public class Login {
             if (enteredPassword.equals(correctPassword)) {
                 authentifiziert = true;
                 System.out.println("Anmeldung erfolgreich!");
-                books.menuDe();
+                books.menu();
             } else {
                 falschPass--;
                 if (falschPass > 0) {
@@ -88,6 +89,7 @@ public class Login {
                     System.out.println("Zu viele fehlgeschlagene Versuche. Bitte warten Sie 1 Minute.");
                     Thread.sleep(60000);
                     falschPass = versuch;
+                    pass();
                 }
             }
         }
@@ -107,7 +109,7 @@ public class Login {
 
                 if (passwort.equals(confirmPassword)) {
                     System.out.println("Registrierung erfolgreich!");
-                    books.menuDe();
+                    books.menu();
                 } else {
                     versuch--;
                     if (versuch > 0) {
@@ -115,6 +117,7 @@ public class Login {
                                 "Verbleibende Versuche: " + versuch);
                     } else {
                         System.out.println("Versuchen Sie später noch mal aus.");
+                        newAccount();
                     }
                 }
             }
@@ -172,7 +175,7 @@ public class Login {
                     String confirmPassword = scan.nextLine();
                     if (passwort.equals(confirmPassword)) {
                     System.out.println("Erfolgreich!");
-                    books.menuDe();
+                    books.menu();
                     } else {
                     versuch--;
                     if (versuch > 0) {
@@ -180,6 +183,7 @@ public class Login {
                                 "Verbleibende Versuche: " + versuch);
                     } else {
                         System.out.println("Versuchen Sie später noch mal aus.");
+                       changePass();
                     }
                 }
             }

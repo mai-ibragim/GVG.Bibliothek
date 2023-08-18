@@ -33,6 +33,6 @@ public class Language {
             System.out.println("Es ist schiefgelaufen. Probieren Sie noch mal aus." + e.getMessage());
             menuSprache(scanner);
         }
-        book.menuDe();
+        book.menu();
     }
 }
